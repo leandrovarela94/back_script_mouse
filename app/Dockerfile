@@ -15,6 +15,6 @@ RUN pip install pipenv
 RUN pip install pyautogui
 
 # Instala as dependências do projeto
-RUN pipenv install --system --deploy
+RUN pipenv install --deploy
 
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0"]
