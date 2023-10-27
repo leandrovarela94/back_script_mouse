@@ -13,7 +13,6 @@ COPY . /app
 RUN pip install pip --upgrade
 RUN pip install pipenv
 RUN pip install pyautogui
-RUN pip clean
 # Instala as dependências do projeto
 RUN pip install --deploy
 
