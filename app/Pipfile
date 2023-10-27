@@ -6,8 +6,8 @@ name = "pypi"
 [packages]
 uvicorn = "*"
 fastapi = "*"
-pyautogui = "*"
 pynput = "*"
+mss = "*"
 
 [dev-packages]
 

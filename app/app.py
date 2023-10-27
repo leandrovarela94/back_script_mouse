@@ -1,11 +1,10 @@
-import math
-import time
-from threading import Thread
+import threading
 
-import pyautogui
-from fastapi import FastAPI, Request, Response, status
+import uvicorn
+from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from pynput import mouse
+from fastapi.responses import JSONResponse
+from mouse import MouseCircler
 
 app = FastAPI()
 
@@ -19,32 +18,12 @@ app.add_middleware(
 )
 
 
-class MouseCircle:
-    def __init__(self):
-        self.mouse_moved = False
-
-    def on_move(self, x, y):
-        self.mouse_moved = True
-
-    def move_in_circles(self):
-        screen_width, screen_height = pyautogui.size()
-        total_time = 30
-        start_time = time.time()
-        radius = 100
-        while (time.time() - start_time) < total_time and not self.mouse_moved:
-            angle = (time.time() - start_time) * 2 * math.pi
-            x = int(screen_width / 2 + radius * math.cos(angle))
-            y = int(screen_height / 2 + radius * math.sin(angle))
-            pyautogui.moveTo(x, y)
-            time.sleep(0.1)
-
-
-mouse_circle = MouseCircle()
+mouse_circler = MouseCircler()
 
 
 @app.get("/")
 async def on_heath():
-    return Response(status.HTTP_200_OK, content={"message": "Aplicação rodando"})
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"message": "Aplicação rodando"})
 
 
 @app.get("/health")
@@ -52,18 +31,10 @@ async def on_heath():
     return status.HTTP_200_OK
 
 
-@app.get("/start_mouse_circle")
-async def start_mouse_circle():
-    mouse_listener = mouse.Listener(on_move=mouse_circle.on_move)
-    mouse_listener.start()
-
-    def run_mouse_circles():
-        mouse_circle.move_in_circles()
-        mouse_listener.stop()
-
-    # Start moving the mouse in circles in a separate thread
-    mouse_thread = Thread(target=run_mouse_circles)
-    mouse_thread.start()
+@app.get("/mouse_circle")
+async def toggle_mouse_circle():
+    mouse_circler.on_move(0, 0)
+    threading.Thread(target=mouse_circler.move_mouse_in_circles).start()
 
     return "Mouse circles started!"
 
@@ -74,3 +45,6 @@ async def get_error(request: Request, call_next):
     response.headers["referrer-policy"] = "strict-origin-when-cross-origin"
 
     return response
+
+if __name__ == "__main__":
+    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
