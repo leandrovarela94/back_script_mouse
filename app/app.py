@@ -43,8 +43,13 @@ mouse_circle = MouseCircle()
 
 
 @app.get("/")
-async def on():
+async def on_heath():
     return Response(status.HTTP_200_OK, content={"message": "Aplicação rodando"})
+
+
+@app.get("/health")
+async def on_heath():
+    return status.HTTP_200_OK
 
 
 @app.get("/start_mouse_circle")
