@@ -13,7 +13,7 @@ COPY . /app
 RUN pip install pip --upgrade
 RUN pip install pipenv
 RUN pip install pyautogui
-RUN sudo apt-get install python3-tk python3-dev -y
+
 # Instala as dependências do projeto
 RUN pipenv install --system --deploy
 
