@@ -10,7 +10,7 @@ EXPOSE 8000
 COPY . /app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y libevdev-dev
+RUN apt-get update && apt-get install -y libevdev-dev python3-dev
 
 # Install pipenv
 RUN pip install pip --upgrade
