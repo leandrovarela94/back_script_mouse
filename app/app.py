@@ -3,7 +3,7 @@ import time
 from threading import Thread
 
 import pyautogui
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pynput import mouse
 
@@ -40,12 +40,6 @@ class MouseCircle:
 
 
 mouse_circle = MouseCircle()
-
-
-@app.get("/health")
-def get_health():
-
-    return status.HTTP_200_OK
 
 
 @app.get("/start_mouse_circle")

@@ -12,8 +12,7 @@ COPY . /app
 # Instala o pipenv
 RUN pip install pip --upgrade
 RUN pip install pipenv
-RUN pip install pyautogui
 # Instala as dependências do projeto
-RUN pip install --deploy
+RUN pipenv install --system --deploy
 
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0"]
