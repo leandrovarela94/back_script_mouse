@@ -2,11 +2,10 @@ import math
 import time
 from threading import Thread
 
-import keyboard  # Importe a biblioteca keyboard em vez de pynput
 import pyautogui
-import uvicorn
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from pynput import mouse
 
 app = FastAPI()
 
@@ -24,7 +23,7 @@ class MouseCircle:
     def __init__(self):
         self.mouse_moved = False
 
-    def on_move(self, e):
+    def on_move(self, x, y):
         self.mouse_moved = True
 
     def move_in_circles(self):
@@ -43,17 +42,22 @@ class MouseCircle:
 mouse_circle = MouseCircle()
 
 
+@app.get("/health")
+def get_health():
+
+    return status.HTTP_200_OK
+
+
 @app.get("/start_mouse_circle")
 async def start_mouse_circle():
-    # Use o método hook para monitorar o mouse
-    keyboard.hook(mouse_circle.on_move)
-    keyboard.unhook_all()  # Certifique-se de remover qualquer gancho de teclado existente
+    mouse_listener = mouse.Listener(on_move=mouse_circle.on_move)
+    mouse_listener.start()
 
     def run_mouse_circles():
         mouse_circle.move_in_circles()
-        keyboard.unhook_all()
+        mouse_listener.stop()
 
-    # Inicie o movimento do mouse em círculos em uma thread separada
+    # Start moving the mouse in circles in a separate thread
     mouse_thread = Thread(target=run_mouse_circles)
     mouse_thread.start()
 
@@ -66,7 +70,3 @@ async def get_error(request: Request, call_next):
     response.headers["referrer-policy"] = "strict-origin-when-cross-origin"
 
     return response
-
-
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
