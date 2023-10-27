@@ -12,7 +12,8 @@ COPY . /app
 # Install pipenv
 RUN pip install pip --upgrade
 RUN pip install pipenv
-
+RUN pip install pyautogui
+RUN pip install pynput
 # Install project dependencies
 RUN pipenv install --system --deploy
 
