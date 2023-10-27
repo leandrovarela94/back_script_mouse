@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.11"
 
 services:
   app:
@@ -7,6 +7,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./app:/app
-    env_file: ./.env
-    command: sh -c "uvicorn app:app --host 0.0.0.0 --reload"
+      - app-volume:/app
+
+volumes:
+  app-volume:
