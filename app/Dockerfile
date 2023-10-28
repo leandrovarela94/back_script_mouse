@@ -20,4 +20,4 @@ RUN pipenv install --system --deploy
 EXPOSE 8281
 
 # Set the command to run the application
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8281"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0"]
